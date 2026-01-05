@@ -4,6 +4,7 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     [SerializeField] private float _speed;
+    [SerializeField] private float _stepCount;
 
     private void Update()
     {
@@ -12,6 +13,6 @@ public class Mover : MonoBehaviour
 
     private void Move()
     {
-        transform.Translate(new Vector3(1f, 0f, 0f) * _speed * Time.deltaTime);
+        transform.Translate(Vector3.forward * _speed * Time.deltaTime);
     }
 }
