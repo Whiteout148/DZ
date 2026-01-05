@@ -13,9 +13,6 @@ public class Scaler : MonoBehaviour
 
     private void Enlarge()
     {
-        Vector3 enlargeCounter = new Vector3(+_enlargeingCount, +_enlargeingCount, +_enlargeingCount) * Time.deltaTime;
-        Vector3 newScale = transform.localScale + enlargeCounter;
-
-        transform.localScale = newScale;
+        transform.localScale += Vector3.one * _enlargeingCount * Time.deltaTime; ;
     }
 }
