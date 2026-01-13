@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,7 +6,11 @@ using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
-    [SerializeField] private Counter _counter;
+    private const int LeftMouseButton = 0;
+
+    public Action OnStartRunning;
+    public Action OnEndRunning;
+    private bool _isRunning = false;
 
     private void Update()
     {
@@ -14,15 +19,17 @@ public class UserInput : MonoBehaviour
 
     private void StartWithUser()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(LeftMouseButton))
         {
-            if (_counter.IsRunning)
+            if (_isRunning)
             {
-                _counter.StopAddNumber();
+                _isRunning = false;
+                OnEndRunning?.Invoke();
             }
             else
             {
-                _counter.StartAddNumber();
+                _isRunning = true;
+                OnStartRunning?.Invoke();
             }
         }
     }

@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class CounterViewer : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _counterText;
-    [SerializeField] private Counter _counter;
+    [SerializeField] private TextMeshProUGUI _counterNumber;
+    private int _number = 0;
 
-    private void Update()
+    public void WriteNumber()
     {
-        SetText();
-    }
-
-    private void SetText()
-    {
-        _counterText.text = _counter.Check.ToString();
+        _number++;
+        _counterNumber.text = _number.ToString();
     }
 }

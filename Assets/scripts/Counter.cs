@@ -1,41 +1,42 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Counter : MonoBehaviour
 {
-    private Coroutine _checkCoroutine;
+    public Action OnAdd;
 
-    public int Check { get; private set; } = 0;
-    public float TimeToUpdate { get; private set; } = 0.5f;
-    public bool IsRunning { get; private set; } = false;
+    [SerializeField] private float _delayTime = 0.5f;
 
-    public void StartAddNumber()
+    private int _changedNumber = 0;
+    private bool _isRunning = false;
+    private Coroutine _coroutineCounter;
+
+    public void StartCounting()
     {
-        if (IsRunning == false)
-        {
-            IsRunning = true;
-            _checkCoroutine = StartCoroutine(AddNumber());
-        }
+        _isRunning = true;
+        _coroutineCounter = StartCoroutine(AddNumber());
     }
 
-    public void StopAddNumber()
+    public void StopCounting()
     {
-        if (IsRunning)
+        if (_coroutineCounter != null)
         {
-            IsRunning = false;
-            _checkCoroutine = null;
-        }
+            _isRunning = false;
+            StopCoroutine(_coroutineCounter);
+        }    
     }
 
     private IEnumerator AddNumber()
     {
-        WaitForSeconds delay = new WaitForSeconds(TimeToUpdate);
+        WaitForSeconds delay = new WaitForSeconds(_delayTime);
 
-        while (IsRunning)
+        while (_isRunning)
         {
-            Check++;
+            _changedNumber++;
+            OnAdd?.Invoke();
 
             yield return delay;
         }
