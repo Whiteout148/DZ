@@ -7,20 +7,32 @@ using UnityEngine;
 public class Counter : MonoBehaviour
 {
     public Action OnAdd;
+    private Coroutine _coroutineCounter;
 
     [SerializeField] private float _delayTime = 0.5f;
 
     private int _changedNumber = 0;
     private bool _isRunning = false;
-    private Coroutine _coroutineCounter;
 
-    public void StartCounting()
+    public void SetCountingStage()
+    {
+        if (_isRunning)
+        {
+            StopCounting();
+        }
+        else
+        {
+            StartCounting();
+        }
+    }
+
+    private void StartCounting()
     {
         _isRunning = true;
         _coroutineCounter = StartCoroutine(AddNumber());
     }
 
-    public void StopCounting()
+    private void StopCounting()
     {
         if (_coroutineCounter != null)
         {

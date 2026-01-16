@@ -8,8 +8,7 @@ public class UserInput : MonoBehaviour
 {
     private const int LeftMouseButton = 0;
 
-    public Action OnStartRunning;
-    public Action OnEndRunning;
+    public Action OnClickLeftMouse;
     private bool _isRunning = false;
 
     private void Update()
@@ -21,16 +20,7 @@ public class UserInput : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(LeftMouseButton))
         {
-            if (_isRunning)
-            {
-                _isRunning = false;
-                OnEndRunning?.Invoke();
-            }
-            else
-            {
-                _isRunning = true;
-                OnStartRunning?.Invoke();
-            }
+            OnClickLeftMouse?.Invoke();
         }
     }
 }

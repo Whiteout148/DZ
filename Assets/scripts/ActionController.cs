@@ -13,14 +13,12 @@ public class ActionController : MonoBehaviour
     private void OnEnable()
     {
         _counter.OnAdd += _counterViewer.WriteNumber;
-        _userInput.OnStartRunning += _counter.StartCounting;
-        _userInput.OnEndRunning += _counter.StopCounting;
+        _userInput.OnClickLeftMouse += _counter.SetCountingStage;
     }
 
     private void OnDisable()
     {
         _counter.OnAdd -= _counterViewer.WriteNumber;
-        _userInput.OnStartRunning -= _counter.StartCounting;
-        _userInput.OnEndRunning -= _counter.StopCounting;
+       _userInput.OnClickLeftMouse -= _counter.SetCountingStage;
     }
 }
