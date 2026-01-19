@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class UserUtils
 {
-    private static System.Random s_random;
+    private static System.Random s_random = new System.Random();
 
     public static int GetRandomNumber(int min, int max)
     {

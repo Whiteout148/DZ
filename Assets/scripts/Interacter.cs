@@ -5,6 +5,7 @@ using UnityEngine;
 public class Interacter : MonoBehaviour
 {
     [SerializeField] private Raycaster _raycaster;
+    [SerializeField] private Spawner _spawner;
 
     private void OnEnable()
     {
@@ -20,6 +21,8 @@ public class Interacter : MonoBehaviour
     {
         GameObject cube = _raycaster.GetHittedObject();
 
-        cube.GetComponent<Spawner>().Spawn();
+        _spawner.Spawn(cube);
+        cube.GetComponent<Exploder>().Explode();
+        Destroy(cube);
     }
 }

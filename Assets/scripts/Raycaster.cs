@@ -34,7 +34,7 @@ public class Raycaster : MonoBehaviour
 
         if (Physics.Raycast(_ray, out _hit))
         {
-            if (_hit.transform.gameObject.GetComponent<Spawner>())
+            if (_hit.transform.gameObject.GetComponent<Exploder>())
             {
                 OnHitCube?.Invoke();
             }

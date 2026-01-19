@@ -7,25 +7,31 @@ public class Spawner : MonoBehaviour
 {
     private const int MinSpawnCount = 2;
     private const int MaxSpawnCount = 6;
+    private const int MaxSpawnChance = 100;
 
-    private static int s_chanceToSpawn = 100;
+    private static int s_chanceToSpawn = MaxSpawnChance;
 
-    public void Spawn()
+    [SerializeField] private Painter _painter;
+
+    public void Spawn(GameObject objectToSpawn)
     {
-        int spawnCount = UserUtils.GetRandomNumber(MinSpawnCount, MaxSpawnCount);
-        Debug.Log("spawned");
-
-        for (int i = 0; i < spawnCount; i++)
+        if (s_chanceToSpawn >= UserUtils.GetRandomNumber(0, MaxSpawnChance))
         {
-            SpawnCube();
+            int spawnCount = UserUtils.GetRandomNumber(MinSpawnCount, MaxSpawnCount);
+
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnCube(objectToSpawn);
+            }
         }
 
-        s_chanceToSpawn--;
+        s_chanceToSpawn /= 2;
     }
 
-    private void SpawnCube()
+    private void SpawnCube(GameObject objectToClone)
     {
-        GameObject spawnedCube = Instantiate(transform.gameObject, transform.localPosition, Quaternion.identity);
-        spawnedCube.transform.localScale = transform.localScale / 2;
+        GameObject spawnedCube = Instantiate(objectToClone, objectToClone.transform.position, Quaternion.identity);
+        spawnedCube.transform.localScale = objectToClone.transform.localScale / 2;
+        spawnedCube.GetComponent<Renderer>().material.color = _painter.GetRandomColor();
     }
 }
