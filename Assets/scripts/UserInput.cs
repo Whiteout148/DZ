@@ -6,17 +6,16 @@ using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
-    private const int LeftMouseButton = 0;
+    public event Action OnClickLeftMouse;
 
-    public Action OnClickLeftMouse;
-    private bool _isRunning = false;
+    private const int LeftMouseButton = 0;
 
     private void Update()
     {
-        StartWithUser();
+        SetUserInput();
     }
 
-    private void StartWithUser()
+    public void SetUserInput()
     {
         if (Input.GetMouseButtonDown(LeftMouseButton))
         {
