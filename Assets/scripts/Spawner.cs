@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
     public void Spawn()
     {
         int spawnCount = UserUtils.GetRandomNumber(MinSpawnCount, MaxSpawnCount);
-        Debug.Log("su");
+        Debug.Log("spawned");
 
         for (int i = 0; i < spawnCount; i++)
         {
