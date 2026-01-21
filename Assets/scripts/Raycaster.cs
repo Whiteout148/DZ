@@ -13,36 +13,33 @@ public class Raycaster : MonoBehaviour
     [SerializeField] private UserInput _userInput;
     [SerializeField] private Camera _camera;
 
-    public Action OnHitCube;
+    public event Action<BombCube> HittedCube;
 
     private RaycastHit _hit;
     private Ray _ray;
 
     private void OnEnable()
     {
-        _userInput.OnClickLeftMouse += LaunchRay;
+        _userInput.ClickingButton += LaunchRay;
     }
 
     private void OnDisable()
     {
-        _userInput.OnClickLeftMouse -= LaunchRay;
+        _userInput.ClickingButton -= LaunchRay;
     }
 
-    public void LaunchRay()
+    public void LaunchRay(Vector3 mousePosition)
     {
-        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+        _ray = _camera.ScreenPointToRay(mousePosition);
 
         if (Physics.Raycast(_ray, out _hit))
         {
-            if (_hit.transform.gameObject.GetComponent<Exploder>())
+            GameObject hittedObject = _hit.transform.gameObject;
+
+            if (hittedObject.TryGetComponent<BombCube>(out BombCube bombCube))
             {
-                OnHitCube?.Invoke();
+                HittedCube?.Invoke(bombCube);
             }
         }
-    }
-
-    public GameObject GetHittedObject()
-    {
-        return _hit.transform.gameObject;
     }
 }

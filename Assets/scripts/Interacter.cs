@@ -6,23 +6,28 @@ public class Interacter : MonoBehaviour
 {
     [SerializeField] private Raycaster _raycaster;
     [SerializeField] private Spawner _spawner;
+    [SerializeField] private Exploder _exploder;
 
     private void OnEnable()
     {
-        _raycaster.OnHitCube += InteractWithCube;
+        _raycaster.HittedCube += OnInteractWithCube;
     }
 
     private void OnDisable()
     {
-        _raycaster.OnHitCube -= InteractWithCube;
+        _raycaster.HittedCube -= OnInteractWithCube;
     }
 
-    private void InteractWithCube()
+    private void OnInteractWithCube(BombCube cube)
     {
-        GameObject cube = _raycaster.GetHittedObject();
+        _spawner.AddObjectToOperations(cube);
 
-        _spawner.Spawn(cube);
-        cube.GetComponent<Exploder>().Explode();
-        Destroy(cube);
+        if (cube.TryToDivide())
+        {
+            List<BombCube> objectsToExplode = _spawner.GetSpawnedClones();
+            _exploder.Explode(cube, objectsToExplode);
+        }
+
+        _spawner.DestroyCube();
     }
 }

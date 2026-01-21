@@ -6,20 +6,20 @@ using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
-    public event Action OnClickLeftMouse;
+    private const int ButtonIndex = 0;
 
-    private const int LeftMouseButton = 0;
+    public event Action<Vector3> ClickingButton;
 
     private void Update()
     {
-        SetUserInput();
+        ReadInput();
     }
 
-    public void SetUserInput()
+    public void ReadInput()
     {
-        if (Input.GetMouseButtonDown(LeftMouseButton))
+        if (Input.GetMouseButtonDown(ButtonIndex))
         {
-            OnClickLeftMouse?.Invoke();
+            ClickingButton?.Invoke(Input.mousePosition);
         }
     }
 }
