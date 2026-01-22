@@ -34,9 +34,7 @@ public class Raycaster : MonoBehaviour
 
         if (Physics.Raycast(_ray, out _hit))
         {
-            GameObject hittedObject = _hit.transform.gameObject;
-
-            if (hittedObject.TryGetComponent<BombCube>(out BombCube bombCube))
+            if (_hit.transform.gameObject.TryGetComponent(out BombCube bombCube))
             {
                 HittedCube?.Invoke(bombCube);
             }

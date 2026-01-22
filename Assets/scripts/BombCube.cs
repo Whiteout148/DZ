@@ -12,25 +12,13 @@ public class BombCube : MonoBehaviour
     private int _chanceDivider = 2;
     private int _chanceToDivide = 100;
 
-    public bool TryToDivide()
+    public bool IsDivideable()
     {
-        if (UnityEngine.Random.Range(0, MaxChance) <= _chanceToDivide)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return UnityEngine.Random.Range(0, MaxChance) <= _chanceToDivide;
     }
 
     public void DivideChance()
     {
         _chanceToDivide /= _chanceDivider;
-    }
-
-    public int GetRandomClonesCount()
-    {
-        return UnityEngine.Random.Range(MinClonesCount, MaxClonesCount);
     }
 }

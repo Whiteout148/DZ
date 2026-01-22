@@ -6,39 +6,38 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     private const int ScaleDivider = 2;
+    private const int MinClones = 2;
+    private const int MaxClones = 6;
 
     private BombCube _spawnedCube;
-    private BombCube _objectToOperations;
 
-    public void AddObjectToOperations(BombCube objectToOperations)
-    {
-        _objectToOperations = objectToOperations;
-    }
-
-    public List<BombCube> GetSpawnedClones()
+    public List<BombCube> SpawnCubes(BombCube cube)
     {
         List<BombCube> spawnedClones = new List<BombCube>();
 
-        int clonesCount = _objectToOperations.GetRandomClonesCount();
-
-        for (int i = 0; i < clonesCount; i++)
+        for (int i = 0; i < UnityEngine.Random.Range(MinClones, MaxClones); i++)
         {
-            spawnedClones.Add(GetSpawnedCube());
+            spawnedClones.Add(SpawnCube(cube));
         }
 
         return spawnedClones;
     }
 
-    public void DestroyCube()
+    public void DestroyCube(BombCube cube)
     {
-        Destroy(_objectToOperations.gameObject);
+        Destroy(cube.gameObject);
     }
 
-    private BombCube GetSpawnedCube()
+    private BombCube SpawnCube(BombCube cube)
     {
-        _spawnedCube = Instantiate(_objectToOperations, _objectToOperations.transform.position, Quaternion.identity, _objectToOperations.transform.parent);
-        _spawnedCube.transform.localScale = _objectToOperations.transform.localScale / ScaleDivider;
-        _spawnedCube.GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
+        _spawnedCube = Instantiate(cube, cube.transform.position, Quaternion.identity, cube.transform.parent);
+        _spawnedCube.transform.localScale = cube.transform.localScale / ScaleDivider;
+        
+        if (_spawnedCube.TryGetComponent(out Renderer cubeRenderer))
+        {
+            cubeRenderer.material.color = UnityEngine.Random.ColorHSV();
+        }
+
         _spawnedCube.DivideChance();
 
         return _spawnedCube;

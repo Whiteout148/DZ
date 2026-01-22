@@ -20,14 +20,12 @@ public class Interacter : MonoBehaviour
 
     private void OnInteractWithCube(BombCube cube)
     {
-        _spawner.AddObjectToOperations(cube);
-
-        if (cube.TryToDivide())
+        if (cube.IsDivideable())
         {
-            List<BombCube> objectsToExplode = _spawner.GetSpawnedClones();
+            List<BombCube> objectsToExplode = _spawner.SpawnCubes(cube);
             _exploder.Explode(cube, objectsToExplode);
         }
 
-        _spawner.DestroyCube();
+        _spawner.DestroyCube(cube);
     }
 }

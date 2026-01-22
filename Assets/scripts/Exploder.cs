@@ -12,7 +12,10 @@ public class Exploder : MonoBehaviour
     {
         for (int i = 0; i < explodableObjects.Count; i++)
         {
-            explodableObjects[i].GetComponent<Rigidbody>().AddExplosionForce(_explodeForce, objectToExplode.transform.position, _explodeRadius);
+            if (explodableObjects[i].TryGetComponent(out Rigidbody explodableObject))
+            {
+                explodableObject.AddExplosionForce(_explodeForce, objectToExplode.transform.position, _explodeRadius);
+            }
         }
     }
 }
