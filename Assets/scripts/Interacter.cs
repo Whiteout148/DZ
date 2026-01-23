@@ -25,6 +25,10 @@ public class Interacter : MonoBehaviour
             List<BombCube> objectsToExplode = _spawner.SpawnCubes(cube);
             _exploder.Explode(cube, objectsToExplode);
         }
+        else
+        {
+            _exploder.SphereExplode(cube);
+        }
 
         _spawner.DestroyCube(cube);
     }

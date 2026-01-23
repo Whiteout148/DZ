@@ -38,7 +38,7 @@ public class Spawner : MonoBehaviour
             cubeRenderer.material.color = UnityEngine.Random.ColorHSV();
         }
 
-        _spawnedCube.DivideChance();
+        _spawnedCube.ChangeProperties();
 
         return _spawnedCube;
     }
