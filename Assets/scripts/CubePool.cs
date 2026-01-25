@@ -7,11 +7,15 @@ public class CubePool : MonoBehaviour
 {
     private const float MinSpawnPosition = -10;
     private const float MaxSpawnPosition = 10;
+    private const float WaitTime = 0.5f;
 
     [SerializeField] private float _spawnHeight;
     [SerializeField] private Cube _cubePrefab;
 
+    private UnityEngine.Color _defaultColor;
     private ObjectPool<Cube> _pool;
+    private Coroutine _coroutine;
+    private bool _isSpawning = false;
 
     private void Awake()
     {
@@ -20,11 +24,32 @@ public class CubePool : MonoBehaviour
             OnGet,
             OnRelease
         );
+
+        _defaultColor = Color.white;
     }
 
-    public Cube GetCube()
+    private void Start()
     {
-        return _pool.Get();
+        _coroutine = StartCoroutine(SpawnCubes());
+    }
+
+    private void OnApplicationQuit()
+    {
+        _isSpawning = false;
+        StopCoroutine(_coroutine);
+    }
+
+    private IEnumerator SpawnCubes()
+    {
+        WaitForSeconds delay = new WaitForSeconds(WaitTime);
+        _isSpawning = true;
+
+        while (_isSpawning)
+        {
+            _pool.Get();
+
+            yield return delay;
+        }
     }
 
     private void OnRelease(Cube cube)
@@ -32,6 +57,10 @@ public class CubePool : MonoBehaviour
         if (cube.TryGetComponent(out Rigidbody cubeRigidbody))
         {
             cubeRigidbody.isKinematic = true;
+        }
+        if (cube.TryGetComponent(out Renderer renderer))
+        {
+            renderer.material.color = _defaultColor;
         }
 
         cube.ReturnedToPool -= OnReturningToPool;
