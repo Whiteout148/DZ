@@ -11,8 +11,8 @@ public class CubePool : MonoBehaviour
 
     [SerializeField] private float _spawnHeight;
     [SerializeField] private Cube _cubePrefab;
+    [SerializeField] private Painter _painter;
 
-    private UnityEngine.Color _defaultColor;
     private ObjectPool<Cube> _pool;
     private Coroutine _coroutine;
     private bool _isSpawning = false;
@@ -20,12 +20,10 @@ public class CubePool : MonoBehaviour
     private void Awake()
     {
         _pool = new ObjectPool<Cube>(
-            CreateFunc,
+            OnCreate,
             OnGet,
             OnRelease
         );
-
-        _defaultColor = Color.white;
     }
 
     private void Start()
@@ -54,16 +52,10 @@ public class CubePool : MonoBehaviour
 
     private void OnRelease(Cube cube)
     {
-        if (cube.TryGetComponent(out Rigidbody cubeRigidbody))
-        {
-            cubeRigidbody.isKinematic = true;
-        }
-        if (cube.TryGetComponent(out Renderer renderer))
-        {
-            renderer.material.color = _defaultColor;
-        }
-
-        cube.ReturnedToPool -= OnReturningToPool;
+        cube.ResetVelocity();
+        cube.Respawned -= OnReturningToPool;
+        cube.CollisedFloor -= _painter.OnCollisedFloor;
+        _painter.SetDefaultColor(cube);
         cube.gameObject.SetActive(false);
     }
 
@@ -75,22 +67,21 @@ public class CubePool : MonoBehaviour
     private void OnGet(Cube cube)
     {
         cube.gameObject.SetActive(true);
-        cube.transform.position = GetRandomEnableingPosition();
-
-        if (cube.TryGetComponent(out Rigidbody cubeRigidbody))
-        {
-            cubeRigidbody.isKinematic = false;
-        }
-
-        cube.ReturnedToPool += OnReturningToPool;
+        cube.CollisedFloor += _painter.OnCollisedFloor;
+        cube.transform.position = GetRandomPosition();
+        cube.ResetVelocity();
+        cube.Respawned += OnReturningToPool;
     }
 
-    private Cube CreateFunc()
+    private Cube OnCreate()
     {
-        return Instantiate(_cubePrefab, GetRandomEnableingPosition(), Quaternion.identity, transform.parent);
+        Cube cube = Instantiate(_cubePrefab, GetRandomPosition(), Quaternion.identity, transform.parent);
+        _painter.SetDefaultColor(cube);
+         
+        return cube;
     }
 
-    private Vector3 GetRandomEnableingPosition()
+    private Vector3 GetRandomPosition()
     {
         float positionX = UnityEngine.Random.Range(MinSpawnPosition, MaxSpawnPosition);
         float positionZ = UnityEngine.Random.Range(MinSpawnPosition, MaxSpawnPosition);

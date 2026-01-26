@@ -1,41 +1,49 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    private const int MinTimeToReturn = 2;
-    private const int MaxTimeToReturn = 5;
-    private const string FloorTag = "Floor";
+    private const int MinTimeToRespawn = 2;
+    private const int MaxTimeToRespawn = 5;
 
-    public event Action<Cube> ReturnedToPool;
     private Coroutine _coroutine;
-    private bool _isCollising = false;
 
-    private void OnCollisionEnter(Collision collision)
+    public event Action<Cube> CollisedFloor;
+    public event Action<Cube> Respawned;
+
+    public bool IsCollising { get; private set; } = false;
+
+    public void ResetVelocity()
     {
-        if (collision.gameObject.tag == FloorTag)
+        if (transform.TryGetComponent(out Rigidbody cubeRigidbody))
         {
-            _coroutine = StartCoroutine(CountDownToReturn());
-
-            if (_isCollising == false)
-            {
-                if (transform.gameObject.TryGetComponent(out Renderer renderer))
-                {
-                    renderer.material.color = UnityEngine.Random.ColorHSV();
-                }
-
-                _isCollising = true;
-            }
+            cubeRigidbody.velocity = Vector3.zero;
+            cubeRigidbody.angularVelocity = Vector3.zero;
         }
     }
 
-    private IEnumerator CountDownToReturn()
+    private void OnCollisionEnter(Collision collision)
     {
-        yield return new WaitForSeconds(UnityEngine.Random.Range(MinTimeToReturn, MaxTimeToReturn));
+        if (collision.gameObject.TryGetComponent<Floor>(out Floor floor))
+        {
+            if (IsCollising == false)
+            {
+                CollisedFloor?.Invoke(this);
+                IsCollising = true;
+            }
 
-        ReturnedToPool?.Invoke(this);
-        _isCollising = false;
+            _coroutine = StartCoroutine(CountDownToDestroy());
+        }
+    }
+
+    private IEnumerator CountDownToDestroy()
+    {
+        yield return new WaitForSeconds(UnityEngine.Random.Range(MinTimeToRespawn, MaxTimeToRespawn));
+
+        Respawned?.Invoke(this);
+        IsCollising = false;
     }
 }
