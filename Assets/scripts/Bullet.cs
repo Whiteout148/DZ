@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    
+    public float Speed { get; private set; } = 5f;
 }

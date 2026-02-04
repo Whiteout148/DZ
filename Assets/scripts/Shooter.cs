@@ -10,7 +10,6 @@ public class Shooter : MonoBehaviour
     [SerializeField] private Bullet _prefab;
     [SerializeField] private Transform _objectToShoot;
     [SerializeField] private float _timeToShoot = 3f;
-    [SerializeField] private float _bulletSpeed = 10f;
 
     private Coroutine _shootingCoroutine;
 
@@ -39,7 +38,7 @@ public class Shooter : MonoBehaviour
             if (spawnedBullet.TryGetComponent(out Rigidbody bulletRigidbody))
             {
                 bulletRigidbody.transform.up = direction;
-                bulletRigidbody.velocity = direction * _bulletSpeed;
+                bulletRigidbody.velocity = direction * spawnedBullet.Speed;
             }
 
             yield return delay;
