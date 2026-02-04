@@ -7,16 +7,16 @@ using UnityEngine;
 
 public class Shooter : MonoBehaviour
 {
-    [SerializeField] private GameObject _prefab;
+    [SerializeField] private Bullet _prefab;
     [SerializeField] private Transform _objectToShoot;
-    private Coroutine _shootingCoroutine;
-
     [SerializeField] private float _timeToShoot = 3f;
     [SerializeField] private float _bulletSpeed = 10f;
 
+    private Coroutine _shootingCoroutine;
+
     private bool _isShooting = true;
 
-    void Start()
+    private void Start()
     {
         _shootingCoroutine = StartCoroutine(Shoot());
     }
@@ -33,8 +33,14 @@ public class Shooter : MonoBehaviour
 
         while (_isShooting)
         {
-            GameObject bullet = Instantiate(_prefab, transform.position, Quaternion.identity);
-            bullet.transform.Translate(Vector3.forward * _bulletSpeed * Time.deltaTime);
+            Vector3 direction = (_objectToShoot.position - transform.position).normalized;
+            Bullet spawnedBullet = Instantiate(_prefab, transform.position + direction, Quaternion.identity);
+
+            if (spawnedBullet.TryGetComponent(out Rigidbody bulletRigidbody))
+            {
+                bulletRigidbody.transform.up = direction;
+                bulletRigidbody.velocity = direction * _bulletSpeed;
+            }
 
             yield return delay;
         }

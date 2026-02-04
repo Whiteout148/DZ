@@ -19,7 +19,8 @@ public class Mover : MonoBehaviour
         Transform currentPoint = _places[_placeIndex];
         transform.position = Vector3.MoveTowards(transform.position, currentPoint.position, _speed * Time.deltaTime);
 
-        if (transform.position == currentPoint.position) SwitchPlace();
+        if (transform.position == currentPoint.position) 
+            SwitchPlace();
     }
 
     private Vector3 SwitchPlace()
