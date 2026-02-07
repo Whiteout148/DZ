@@ -9,23 +9,13 @@ public class Home : MonoBehaviour
 
     private void OnEnable()
     {
-        _trigger.RobberCameInside += OnRobberIn;
-        _trigger.RobberCameOut  += OnRobberOut;
+        _trigger.RobberCameInside += _signal.PlayClip;
+        _trigger.RobberCameOut  += _signal.OffClip;
     }
 
     private void OnDisable()
     {
-        _trigger.RobberCameInside -= OnRobberIn;
-        _trigger.RobberCameOut -= OnRobberOut;
-    }
-
-    private void OnRobberIn()
-    {
-        _signal.PlayClip();
-    }
-
-    private void OnRobberOut()
-    {
-        _signal.OffClip();
+        _trigger.RobberCameInside -= _signal.PlayClip;
+        _trigger.RobberCameOut -= _signal.OffClip;
     }
 }
