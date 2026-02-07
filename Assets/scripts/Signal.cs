@@ -26,8 +26,6 @@ public class Signal : MonoBehaviour
             StopCoroutine(_volumeCoroutine);
         }
 
-        Debug.Log("df");
-
         _audioSource.Play();
         _volumeCoroutine = StartCoroutine(ChangeVolume(MaxVolume, false));
     }
